@@ -13,13 +13,14 @@ public class KubernetesService {
     private final ApiClient apiClient;
     private final CoreV1Api coreV1Api;
     private final BatchV1Api batchV1Api;
+    private final String namespace;
 
-    @Value("${namespace}") private String namespace;
-
-    public KubernetesService(ApiClient apiClient, CoreV1Api coreV1Api, BatchV1Api batchV1Api) {
+    public KubernetesService(ApiClient apiClient, CoreV1Api coreV1Api, BatchV1Api batchV1Api,
+                             @Value("${namespace}")  String namespace) {
         this.apiClient = apiClient;
         this.coreV1Api = coreV1Api;
         this.batchV1Api = batchV1Api;
+        this.namespace = namespace;
     }
 
     public V1JobList listNamespacedJob() throws ApiException {
