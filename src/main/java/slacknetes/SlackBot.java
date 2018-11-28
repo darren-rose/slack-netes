@@ -1,5 +1,7 @@
 package slacknetes;
 
+import io.kubernetes.client.ApiException;
+import io.kubernetes.client.models.V1JobList;
 import me.ramswaroop.jbot.core.slack.Bot;
 import me.ramswaroop.jbot.core.slack.Controller;
 import me.ramswaroop.jbot.core.slack.EventType;
@@ -12,8 +14,13 @@ import org.springframework.web.socket.WebSocketSession;
 @Component
 public class SlackBot extends Bot {
 
-    @Value("${slackBotToken}")
-    private String slackToken;
+    private final KubernetesService kubernetesService;
+    private final String slackToken;
+
+    public SlackBot(KubernetesService kubernetesService, @Value("${slackBotToken}") String slackToken) {
+        this.kubernetesService = kubernetesService;
+        this.slackToken = slackToken;
+    }
 
     @Override
     public String getSlackToken() {
@@ -26,12 +33,14 @@ public class SlackBot extends Bot {
     }
 
     @Controller(events = {EventType.DIRECT_MENTION, EventType.DIRECT_MESSAGE})
-    public void onReceive(WebSocketSession session, Event event) {
-        if (event.getText().toLowerCase().contains("keyword1")) {
-            reply(session, event, new Message("Keyword1 received"));
+    public void onReceive(WebSocketSession session, Event event) throws ApiException {
+        if (event.getText().toLowerCase().contains("jobs")) {
+            V1JobList jobs = kubernetesService.listNamespacedJob();
+            String version = jobs.getApiVersion();
+            reply(session, event, new Message(version));
             return;
         }
-        reply(session, event, new Message("Hi, the following keywords are supported\nkeyword1"));
+        reply(session, event, new Message("Hi, the following keywords are supported\njobs"));
     }
 
 }

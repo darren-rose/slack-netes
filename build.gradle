@@ -1,6 +1,7 @@
 buildscript {
     ext {
         springBootVersion = '2.0.1.RELEASE'
+        kubernetesClientVersion = '3.0.0'
         jbotVersion = '3.0.2'
     }
     repositories {
@@ -24,7 +25,36 @@ repositories {
 
 dependencies {
     compile('org.springframework.boot:spring-boot-starter')
+    compile("io.kubernetes:client-java:${kubernetesClientVersion}")
     compile("me.ramswaroop.jbot:jbot:${jbotVersion}")
+}
 
-    testCompile('org.springframework.boot:spring-boot-starter-test')
+def kubernetesNamespace = System.getenv("KUBERNETES_NAMESPACE")
+
+task dockerBuild(type : Exec) {
+    group 'slack-netes'
+    description 'docker build'
+
+    commandLine 'docker', 'build', '-t', "darrenrose/${project.name}", "."
+}
+
+task dockerPush(type : Exec) {
+    group 'slack-netes'
+    description 'docker push'
+
+    commandLine 'docker', 'push', "darrenrose/${project.name}"
+}
+
+task k8sDeploy(type : Exec) {
+    group 'dtc'
+    description 'k8s deploy '
+
+    commandLine 'kubectl', 'apply', '-f', "Kubernetes.yml", "--namespace=${kubernetesNamespace}"
+}
+
+task k8sUnDeploy(type : Exec) {
+    group 'dtc'
+    description 'k8s undeploy'
+
+    commandLine 'kubectl', 'delete', '-f', "Kubernetes.yml", "--namespace=${kubernetesNamespace}"
 }
