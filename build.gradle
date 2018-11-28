@@ -1,0 +1,30 @@
+buildscript {
+    ext {
+        springBootVersion = '2.0.1.RELEASE'
+        jbotVersion = '3.0.2'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+group = 'slacknetes'
+version = '1.0.0'
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('org.springframework.boot:spring-boot-starter')
+    compile("me.ramswaroop.jbot:jbot:${jbotVersion}")
+
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
