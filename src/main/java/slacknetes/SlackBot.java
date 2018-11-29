@@ -40,7 +40,13 @@ public class SlackBot extends Bot {
             reply(session, event, new Message(version));
             return;
         }
-        reply(session, event, new Message("Hi, the following keywords are supported\njobs"));
+        if (event.getText().toLowerCase().contains("ciao")) {
+            V1JobList jobs = kubernetesService.listNamespacedJob();
+            String version = "cia bella";
+            reply(session, event, new Message(version));
+            return;
+        }
+        reply(session, event, new Message("Hi, the following keywords are supported\njobs\nciao"));
     }
 
 }
