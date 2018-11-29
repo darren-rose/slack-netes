@@ -23,7 +23,7 @@ spec:
         imagePullPolicy: Always
         env:
         - name: slackBotToken
-          value: xoxb-490608489090-489874020128-RcMDN4knJ392317ANPygqCJI
+          value: your-token
         - name: NAMESPACE
           valueFrom:
             fieldRef:
