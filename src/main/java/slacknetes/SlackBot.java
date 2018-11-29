@@ -42,7 +42,7 @@ public class SlackBot extends Bot {
         }
         if (event.getText().toLowerCase().contains("ciao")) {
             V1JobList jobs = kubernetesService.listNamespacedJob();
-            String version = "cia bella";
+            String version = "ciao bella";
             reply(session, event, new Message(version));
             return;
         }
